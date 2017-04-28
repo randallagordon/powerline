@@ -246,7 +246,7 @@ def file_scheme(pl, segment_info):
 
 
 @requires_segment_info
-def file_directory(pl, segment_info, remove_scheme=True, shorten_user=True, shorten_cwd=True, shorten_home=False):
+def file_directory(pl, segment_info, remove_scheme=True, shorten_user=True, shorten_cwd=True, shorten_home=False, max_depth=2, ellipsis=u'⋯'):
 	'''Return file directory (head component of the file path).
 
 	:param bool remove_scheme:
@@ -284,6 +284,8 @@ def file_directory(pl, segment_info, remove_scheme=True, shorten_user=True, shor
 		if shorten_home and file_directory.startswith('/home/'):
 			file_directory = b'~' + file_directory[6:]
 	file_directory = file_directory.decode(segment_info['encoding'], 'powerline_vim_strtrans_error')
+	if len(file_directory.split(os.sep)) > max_depth:
+		file_directory = ellipsis + os.sep + os.sep.join(file_directory.split(os.sep)[max_depth:])
 	return file_directory + os.sep
 
 
